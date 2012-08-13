@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-<<<<<<< HEAD
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:sec="http://www.springframework.org/schema/security"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -8,9 +7,10 @@
        http://www.springframework.org/schema/security
        http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
+	<import resource="servlet-context.xml"/>
+
 	<!-- NOTE: create-session - false (as its REST Service) -->
-    <sec:http disable-url-rewriting="true" entry-point-ref="forbiddenEntryPoint" 
-    use-expressions="true" create-session="never">
+    <sec:http disable-url-rewriting="true" entry-point-ref="forbiddenEntryPoint" use-expressions="true" create-session="never">
         <sec:anonymous enabled="false"/>
         <sec:session-management session-fixation-protection="none"/>
         <sec:custom-filter ref="restAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
@@ -21,29 +21,19 @@
 		 using the traditional approach of form login which spring redirects to after authentication
 		 we return 403 resource by default -->
     <bean id="forbiddenEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
-=======
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:security="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
-	
-	<security:http disable-url-rewriting="false" entry-point-ref="forbiddenEntryPoint" create-session="never" use-expressions="true">
-		<security:anonymous enabled="false"/>
-		<security:session-management session-fixation-protection="none"/>
-		<security:custom-filter ref="restAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
-		<security:intercept-url pattern="/service/*" access="isFullyAuthenticated()"/>
-	</security:http>
 
-	<bean id="forbiddenEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
-
-	<security:authentication-manager alias="defaultAuthenticationManager" erase-credentials="true">
-        <security:authentication-provider ref="daoAuthenticationProvider"/>
-    </security:authentication-manager>
-	
-	<bean id="daoAuthenticationProvider" class="com.kevinpotgieter.web.security.RESTDaoAuthenticationProvider">
-        <property name="userSecurityService" ref="userSecurityServiceImpl"/>
-        <property name="passwordEncoder" ref="passwordEncoder"/>
-    </bean>
+	<sec:authentication-manager alias="defaultAuthenticationManager" erase-credentials="true">
+        <sec:authentication-provider ref="restUserAuthenticationProvider"/>
+    </sec:authentication-manager>
+    
+    <bean id="restUserAuthenticationProvider" class="demo.vikram.springrest.controller.security.RestUserAuthenticationProvider">
+		<property name="passwordEncoder">
+			<bean class="demo.vikram.springrest.controller.security.HMacShaPasswordEncoder">
+				<constructor-arg value="256"/>
+				<constructor-arg value="true"/>
+			</bean>
+		</property>
+	</bean>
 	
 	<bean id="restAuthenticationFilter" class="demo.vikram.springrest.controller.security.RestAuthenticatonFilter">
         <constructor-arg name="defaultFilterProcessesUrl" value="/service/"/>
@@ -58,6 +48,5 @@
             </bean>
         </property>
     </bean>
->>>>>>> branch 'master' of https://github.com/vikrambindal/spring-rest-security.git
 
 </beans>
