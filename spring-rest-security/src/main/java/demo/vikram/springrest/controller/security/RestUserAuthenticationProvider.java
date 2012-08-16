@@ -1,5 +1,7 @@
 package demo.vikram.springrest.controller.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,9 +19,13 @@ public class RestUserAuthenticationProvider extends AbstractUserDetailsAuthentic
 	private UserSecurityService userSecurityService;
 	
 	private PasswordEncoder passwordEncoder;
+	
+	private static final Logger logger = LoggerFactory.getLogger(RestUserAuthenticationProvider.class);
 
 	@Override
 	protected UserDetails retrieveUser(String apiKey, UsernamePasswordAuthenticationToken token)throws AuthenticationException {
+		
+		logger.debug("retrieveUser, (apiKey={})", new Object[]{apiKey});
 		
 		UserDetails userDetails;
 		try{
@@ -39,6 +45,7 @@ public class RestUserAuthenticationProvider extends AbstractUserDetailsAuthentic
 	protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken token)
 			throws AuthenticationException {
 		
+		logger.debug("additionalAuthenticationCheck");
 		if(token != null){
 			
 			RestCredentials restCredentials = (RestCredentials) token.getCredentials();

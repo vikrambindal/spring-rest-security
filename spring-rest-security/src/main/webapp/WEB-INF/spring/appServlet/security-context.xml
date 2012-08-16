@@ -7,7 +7,7 @@
        http://www.springframework.org/schema/security
        http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<import resource="servlet-context.xml"/>
+	<import resource="appServlet-context.xml"/>
 
 	<!-- NOTE: create-session - false (as its REST Service) -->
     <sec:http disable-url-rewriting="true" entry-point-ref="forbiddenEntryPoint" use-expressions="true" create-session="never">
@@ -32,6 +32,9 @@
 				<constructor-arg value="256"/>
 				<constructor-arg value="true"/>
 			</bean>
+		</property>
+		<property name="userSecurityService">
+			<bean class="demo.vikram.springrest.service.FakeUserSecurityServiceImpl"></bean>
 		</property>
 	</bean>
 	

@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,6 +19,8 @@ public class RestAuthenticatonFilter extends AbstractAuthenticationProcessingFil
 	private static final String REQ_API_KEY = "apiKey";
     private static final String REQ_ID = "id";
     private static final String REQ_HASH_PWD = "signature";
+    
+    private static final Logger logger = LoggerFactory.getLogger(RestAuthenticatonFilter.class);
     
 	protected RestAuthenticatonFilter(String defaultFilterProcessesUrl) {
 		super(defaultFilterProcessesUrl);
@@ -30,6 +34,8 @@ public class RestAuthenticatonFilter extends AbstractAuthenticationProcessingFil
 		String apiKey = obtainReqValue(REQ_API_KEY, request);
 		String uName = obtainReqValue(REQ_ID, request);
 		String encPwd = obtainReqValue(REQ_HASH_PWD, request);
+		
+		logger.debug("Obtained apiKey={}, id={}, sig={}", new Object[]{apiKey, uName, encPwd});
 		
 		RestCredentials restCredentials = new RestCredentials(uName, encPwd);
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(apiKey, restCredentials);
@@ -45,7 +51,7 @@ public class RestAuthenticatonFilter extends AbstractAuthenticationProcessingFil
 	}
 	
 	public String obtainReqValue(String reqParam, HttpServletRequest request){
-		return (request.getParameter(reqParam) == null ? null: request.getParameter(reqParam));
+		return (request.getParameter(reqParam) == null ? null: request.getParameter(reqParam).replaceAll(" ", "+"));
 	}
 	
 	/**

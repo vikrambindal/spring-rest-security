@@ -13,6 +13,7 @@ import demo.vikram.springrest.domain.RestUser;
 public class FakeUserSecurityServiceImpl implements UserSecurityService {
 
 	private RestUser simulateFetch(){
+		//Pwd: spring, 3h0fIH+xV5YSsIF8UIEulEHFpyerRU5PXzaoEPmjWbc=
 		return new RestUser("vikram", "spring", "123456789-987654321-01031982", new ArrayList<GrantedAuthority>());
 	}
 	@Override

@@ -1,5 +1,7 @@
 package demo.vikram.springrest.controller.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.util.StringUtils;
@@ -24,6 +26,8 @@ public class HMacShaPasswordEncoder implements PasswordEncoder {
 
     private boolean encodeHashAsBas64 = false;
     private String algorithm;
+    
+    private static final Logger logger = LoggerFactory.getLogger(HMacShaPasswordEncoder.class);
 
     /**
      * Initializes the ShaPasswordEncoder for SHA-1 strength
@@ -98,7 +102,8 @@ public class HMacShaPasswordEncoder implements PasswordEncoder {
         }
         String pass1 = "" + encPass;
         String pass2 = encodePassword(rawPass, salt);
-
+        
+        logger.debug("encoded={}, rawPass={}", new Object[]{pass1, pass2});
         return equals(pass1, pass2);
     }
 

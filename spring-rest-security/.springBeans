@@ -7,8 +7,8 @@
 	</configSuffixes>
 	<enableImports><![CDATA[true]]></enableImports>
 	<configs>
-		<config>src/main/webapp/WEB-INF/spring/appServlet/root-context.xml</config>
 		<config>src/main/webapp/WEB-INF/spring/appServlet/security-context.xml</config>
+		<config>src/main/webapp/WEB-INF/spring/appServlet/appServlet-context.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
